@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Kant's Tic Tac Toe</title>
+        <meta charset="windows-1252">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        <style>
+            
+            *{box-sizing: border-box;
+               font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            }
+            .flex{
+                display: flex;
+                justify-content: space-between;
+                margin-top: 50px;
+            }
+            .details{
+                
+                width: 173.281px;
+            }
+            #x, #o{
+                color: white;
+            }
+            .container{
+                width: 310px; 
+                overflow: hidden;
+                
+            }
+            .span{
+                margin-bottom: 25px;
+                height: 35px;
+            }
+            
+            .container span{
+                width: 100%;
+                display: block;
+                text-align: center;
+                color: rgb(255, 255, 255);
+                font-size: 30px;
+                background: #CF4B6D;
+            }
+            .mainbox{
+                margin-top: 20px;
+            }
+            .box{
+                float: left;   
+                width: 100px;
+                height: 100px;
+                border-right: 4px solid rgb(241, 185, 185);
+                border-bottom:  4px solid rgb(240, 171, 171);
+                transition: all .25s ease-in-out;
+                font-family: sans-serif;
+                font-size: 85px;
+                text-align: center;
+                line-height: 100px; 
+                cursor:pointer;
+                color: white;
+            }
+            #box3, #box6, #box9{
+                border-right: black;
+            }
+            #box7, #box8, #box9{
+                margin-bottom: 20px;
+                border-bottom: hidden;
+            }
+            .container .box:hover{
+                background: rgba(202, 240, 241, 0.5); 
+                color: rgb(177, 67, 40)
+            }
+            
+            .first{
+                background: #e2abab;
+                color: rgb(70, 18, 18);
+                font-weight: bold;
+                border: 1px solid rgb(0, 255, 213);
+                cursor: pointer; 
+                width: 200px;
+                height: 40px; 
+                font-size: 22px;
+                display: block;
+                margin: auto;
+
+            }
+            
+            .win{
+                background: #F9690E; 
+                color: #fff
+            }
+            .coupon{
+                margin-right: 20px;
+                /* border: 1px solid red; */
+                background-color: white;
+            }
+            .content{
+                width: 300px;
+                height: 100px;
+                /* border: 1px solid red; */
+            }
+            .input{
+                color: white;
+            }
+            #main{
+               
+                visibility: hidden;
+                /* transition: opacity 3s; */
+            }
+            #card{
+                
+                visibility: hidden;
+                
+            }
+            #scratch{
+                border: 1px solid blue;
+                font-size: 12px;
+                background-color: rgb(160, 156, 156);
+                font-weight: 500;
+                display:inline-block;
+                padding: 5px;
+                margin-left: 5px;
+            }
+            
+        </style>
+        
+    </head>
+    <body style=background-color:black>
+        <div class="flex">
+            <div class="left">
+                <div class="input">
+                    <div>
+                     <label >First player's name(X)</label>
+                    </div>
+                    <div>
+                     <input id="fName" type="input" placeholder="enter name">
+                    </div>
+                    <div>
+                     <label >Second player's name(O)</label>
+                    </div>
+                    <div>
+                     <input id="sName" type="input" placeholder="enter name">
+                    </div>
+                    <br/>
+                    <button id="gameStart" type="button" onclick="grab()">Play</button>
+                   <br/>
+                </div>
+                <div class="details">
+                    <div id="rep">
+     
+                    </div>
+                    <div id="x">
+     
+                   </div>
+                   <div id="o">
+     
+                   </div>
+                 
+                 </div>
+            </div>
+            
+            <div class="container" id="main">
+                
+                    <span id="turn">Tic Tac Toe</span>
+
+                    <div class="box" id="box1"></div>
+                    <div class="box" id="box2"></div>
+                    <div class="box" id="box3"></div>
+                    <div class="box" id="box4"></div>
+                    <div class="box" id="box5"></div>
+                    <div class="box" id="box6"></div>
+                    <div class="box" id="box7"></div>
+                    <div class="box" id="box8"></div>
+                    <div class="box" id="box9"></div>
+             
+                <!-- show X or O on div click -->
+                
+                <!-- Play Again And Reset All Info -->
+                <button class="first" type="button" onclick="replay()">Play Again</button>
+            </div>
+            <div class="coupon" id="card">
+              <img src="/logo.png" alt="">
+              <div class="content">
+                 <div id="specs">
+                   
+                 </div>  
+                 <div id="scratch">
+
+                 </div>
+                 <div id="voucherdet">
+
+                 </div>
+              </div>
+            </div>
+        </div>
+        <script>
+            
+            function grab(){
+                var container=document.getElementById("main");
+                var fName=document.getElementById("fName").value;
+                var sName=document.getElementById("sName").value;
+                if(fName !="" && sName !=""){
+                  console.log(fName, sName);
+                 container.style.visibility="visible";
+                    
+                }else{
+                    alert("Please enter name of both players !")
+                }
+            }
+                
+            var turn = document.getElementById("turn");
+            var boxes = document.querySelectorAll("#main div");
+            var rep=document.getElementById("rep");
+            var count = 0;
+            var tie_count=0;
+            var xcount=0;
+            var ocount=0;
+            var repeat=0;
+            var x=document.getElementById("x");
+            var o=document.getElementById("o");
+            var str="amz/";
+
+            
+            function selectWinnerBoxes(b1,b2,b3){
+                var fName=document.getElementById("fName").value;
+                var sName=document.getElementById("sName").value;
+                for(var z=0;z<2;z++){
+                    str=str+Math.floor(Math.random()*10+1);
+                    console.log(str);
+                }
+
+                if(b1.innerHTML==="X"){
+                    turn.innerHTML = "Congrats, " + fName + " won !"
+                    
+                    amazon();
+                }else if(b1.innerHTML==="O"){
+                    turn.innerHTML= "Congrats, "+sName+" won!"
+                   
+                    amazon();
+                }
+                function amazon(){
+                    var specs=document.getElementById("specs");
+                    var scratch=document.getElementById("scratch");
+                    specs.style.padding="5px";
+                    specs.style.color="red";
+                    specs.style.fontSize="13.5px";
+                    specs.style.fontWeight="700";
+                    specs.style.lineHeight="16.5px";
+                    if(b1.innerHTML==="O"){
+                        for(var p=0;p<2;p++){
+                          str=str+sName[p];
+                        }str=str+"!=0n";
+                        console.log(str);
+                        specs.innerHTML=sName+", here is your one time amazon voucher worth 50/-";
+                        scratch.innerHTML=str;
+                    }
+                    if(b1.innerHTML==="X"){
+                        for(var p=0;p<2;p++){
+                            str=str+fName[p]
+                        }str=str+"!=0n";
+                    console.log(str);
+                        specs.innerHTML=fName+", here is your one time amazon voucher worth 50/-";
+                        scratch.innerHTML=str;
+                    }
+                    
+                }
+                var card=document.getElementById("card");
+                card.style.visibility="visible";
+                b1.classList.add("win");
+                b2.classList.add("win");
+                b3.classList.add("win");
+                
+                repeat+=1;
+                turn.style.fontSize = "25px";
+                turn.style.backgroundColor="rgb(0,66,55)";
+                for(var j = 0; j < boxes.length; j++){
+                    if(boxes[j] !=b1 && boxes[j] !=b2 && boxes[j] !=b3 ){
+                         boxes[j].innerHTML="game over, "+b1.innerHTML+" won !"
+                         boxes[j].style.fontSize="10px";
+                    }
+                }
+            }
+            
+            
+            function getWinner(){
+                
+                var box1 = document.getElementById("box1"),
+                    box2 = document.getElementById("box2"),
+                    box3 = document.getElementById("box3"),
+                    box4 = document.getElementById("box4"),
+                    box5 = document.getElementById("box5"),
+                    box6 = document.getElementById("box6"),
+                    box7 = document.getElementById("box7"),
+                    box8 = document.getElementById("box8"),
+                    box9 = document.getElementById("box9");
+            
+             // get all posibilites
+              if(box1.innerHTML !== "" && box1.innerHTML === box2.innerHTML && box1.innerHTML === box3.innerHTML)
+                 {selectWinnerBoxes(box1,box2,box3);
+              
+                 }
+         
+              else if(box4.innerHTML !== "" && box4.innerHTML === box5.innerHTML && box4.innerHTML === box6.innerHTML)
+                 {selectWinnerBoxes(box4,box5,box6);
+               
+                }
+                
+             
+              else if(box7.innerHTML !== "" && box7.innerHTML === box8.innerHTML && box7.innerHTML === box9.innerHTML)
+                 {selectWinnerBoxes(box7,box8,box9);
+                 
+                }
+             
+              else if(box1.innerHTML !== "" && box1.innerHTML === box4.innerHTML && box1.innerHTML === box7.innerHTML)
+                 {selectWinnerBoxes(box1,box4,box7);
+               
+                }
+             
+              else if(box2.innerHTML !== "" && box2.innerHTML === box5.innerHTML && box2.innerHTML === box8.innerHTML)
+                 {selectWinnerBoxes(box2,box5,box8);
+    
+
+                }
+             
+              else if(box3.innerHTML !== "" && box3.innerHTML === box6.innerHTML && box3.innerHTML === box9.innerHTML)
+                {selectWinnerBoxes(box3,box6,box9);
+           
+                }
+              else if(box1.innerHTML !== "" && box1.innerHTML === box5.innerHTML && box1.innerHTML === box9.innerHTML)
+                {selectWinnerBoxes(box1,box5,box9);
+                   
+
+                }
+             
+              else if(box3.innerHTML !== "" && box3.innerHTML === box5.innerHTML && box3.innerHTML === box7.innerHTML)
+                {selectWinnerBoxes(box3,box5,box7);
+
+                  
+                }
+                else{
+                    tiefun();
+                }
+             
+            }
+            
+            
+            // set event onclick
+            for(var i = 0; i < boxes.length; i++){
+                boxes[i].onclick = function(){
+                    // not allow to change the value of the box
+                    if(this.innerHTML == ""){
+                       if(count%2 === 0){
+                        //   console.log(count);
+                          this.innerHTML = "X"; 
+                           turn.innerHTML = "O Turn Now";
+                           getWinner();
+                           tie_count+=1;
+                           count += 1;
+                           xcount+=1;
+                           console.log("x clicked-"+ xcount);
+                           console.log("o clicked-"+ ocount);
+                        }else{
+                        //    console.log(count);
+                          this.innerHTML = "O";
+                          turn.innerHTML = "X Turn Now";
+                          getWinner();
+                           count += 1;
+                           tie_count+=1;
+                           ocount+=1; 
+                           console.log("x clicked-"+ xcount);
+                           console.log("o clicked-"+ ocount);
+                        }
+
+                        
+                    }
+                    x.innerHTML="X has clicked "+xcount+" times";
+                    o.innerHTML= "O has clicked "+ocount+" times";
+                };
+
+               
+
+            };
+           
+            function tiefun(){
+                if(tie_count===8){
+                    turn.innerHTML="Tie, play again !"
+                    repeat+=1;
+                }
+            }
+            
+            function replay(){
+                
+                for(var i = 0; i < boxes.length; i++){
+                    boxes[i].classList.remove("win");
+                    boxes[i].innerHTML = "";
+                    turn.innerHTML ="Play";
+                    turn.style.fontSize = "25px"; 
+                    boxes[i].style.fontSize="85px";
+                }
+                count=0;
+                tie_count=0;
+                xcount=0;
+                ocount=0;
+                str="amz/";
+                turn.innerHTML="Play";
+                turn.style.backgroundColor="#CF4B6D";
+                rep.innerHTML="Game has been played "+repeat+" times."
+                rep.style.color="white";
+                var card=document.getElementById("card");
+                card.style.visibility="hidden";
+            }
+            
+        </script>
+        
+    </body>
+</html>
